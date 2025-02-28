@@ -1,5 +1,4 @@
 services:
-  # Hadoop Namenode
   hadoop-namenode:
     image: bde2020/hadoop-namenode:latest
     container_name: hadoop-namenode
@@ -10,7 +9,6 @@ services:
     volumes:
       - hadoop_namenode:/hadoop/dfs/name
 
-  # Hadoop Datanode
   hadoop-datanode:
     image: bde2020/hadoop-datanode:latest
     container_name: hadoop-datanode
@@ -21,7 +19,6 @@ services:
     volumes:
       - hadoop_datanode:/hadoop/dfs/data
 
-  # Spark Master
   spark-master:
     image: bitnami/spark:latest
     container_name: spark-master
@@ -31,7 +28,6 @@ services:
       - "7077:7077"
       - "8080:8080"
 
-  # Spark Worker
   spark-worker:
     image: bitnami/spark:latest
     container_name: spark-worker
@@ -41,14 +37,12 @@ services:
     depends_on:
       - spark-master
 
-  # Zookeeper (for Kafka)
   zookeeper:
     image: wurstmeister/zookeeper
     container_name: zookeeper
     ports:
       - "2181:2181"
 
-  # Kafka
   kafka:
     image: wurstmeister/kafka
     container_name: kafka
@@ -60,6 +54,16 @@ services:
       - KAFKA_ZOOKEEPER_CONNECT=zookeeper:2181
     depends_on:
       - zookeeper
+
+  jupyter:
+    image: jupyter/pyspark-notebook:latest
+    container_name: jupyter
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./notebooks:/home/jovyan/work
+    environment:
+      - SPARK_MASTER=spark://spark-master:7077
 
 volumes:
   hadoop_namenode:
