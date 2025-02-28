@@ -1,0 +1,5 @@
+# Ignore Docker volumes and cache files
+hadoop_namenode/
+hadoop_datanode/
+workspace/__pycache__/
+workspace/*.log
